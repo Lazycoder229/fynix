@@ -1,0 +1,35 @@
+type ButtonVariant = "primary" | "secondary" | "success" | "danger" | "warning" | "info" | "light" | "dark" | "link";
+type ButtonSize = "sm" | "md" | "lg";
+interface ButtonProps {
+    value?: string;
+    type?: "button" | "submit" | "reset";
+    disabled?: boolean;
+    variant?: ButtonVariant;
+    size?: ButtonSize;
+    outline?: boolean;
+    style?: Record<string, string>;
+    class?: string;
+    rc?: string;
+    "r-click"?: (this: HTMLElement, event: MouseEvent) => void;
+    [key: string]: any;
+}
+export declare function Button({ value, ...props }: ButtonProps): any;
+export declare const PrimaryButton: (p: ButtonProps) => any;
+export declare const SecondaryButton: (p: ButtonProps) => any;
+export declare const SuccessButton: (p: ButtonProps) => any;
+export declare const DangerButton: (p: ButtonProps) => any;
+export declare const WarningButton: (p: ButtonProps) => any;
+export declare const InfoButton: (p: ButtonProps) => any;
+export declare const LightButton: (p: ButtonProps) => any;
+export declare const DarkButton: (p: ButtonProps) => any;
+export declare const LinkButton: (p: ButtonProps) => any;
+export declare const OutlinePrimaryButton: (p: ButtonProps) => any;
+export declare const OutlineSecondaryButton: (p: ButtonProps) => any;
+export declare const OutlineSuccessButton: (p: ButtonProps) => any;
+export declare const OutlineDangerButton: (p: ButtonProps) => any;
+export declare const OutlineWarningButton: (p: ButtonProps) => any;
+export declare const OutlineInfoButton: (p: ButtonProps) => any;
+export declare const OutlineLightButton: (p: ButtonProps) => any;
+export declare const OutlineDarkButton: (p: ButtonProps) => any;
+export declare const OutlineLinkButton: (p: ButtonProps) => any;
+export {};
