@@ -20,11 +20,11 @@ const SELF_CLOSING_TAGS = new Set([
 
 /**
  * Pattern for valid HTML attribute names.
- * Allows letters, digits, hyphens, underscores, dots and colons (for namespaced attrs like xmlns:xlink).
- * Rejects names starting with non-alphabetic characters and any that would allow
- * attribute-name injection (e.g., names containing quotes or angle brackets).
+ * Allows letters, digits, hyphens, underscores, and dots.
+ * A single colon is permitted only as a namespace separator (e.g. xmlns:xlink),
+ * following the XML namespace convention: prefix:localname.
  */
-const VALID_ATTR_NAME = /^[a-zA-Z][a-zA-Z0-9_\-:.]*$/;
+const VALID_ATTR_NAME = /^[a-zA-Z][a-zA-Z0-9_\-.]*(?::[a-zA-Z][a-zA-Z0-9_\-.]*)?$/;
 
 async function renderChildren(children: unknown): Promise<string> {
   if (children == null) return "";
@@ -74,7 +74,7 @@ export async function renderToHTML(node: unknown): Promise<string> {
     for (const [name, value] of Object.entries(attrs)) {
       if (!VALID_ATTR_NAME.test(name)) continue;
       if (BOOLEAN_ATTRS.has(name)) {
-        if (value) attrParts.push(escapeHTML(name));
+        if (value) attrParts.push(name);
       } else if (value != null && value !== false) {
         attrParts.push(`${escapeHTML(name)}="${escapeHTML(String(value))}"`);
       }
