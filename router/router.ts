@@ -119,6 +119,12 @@ interface FynixRouterOptions {
   lazy?: boolean;
 }
 
+interface NestedRoute {
+  path: string;
+  component: RouteComponent;
+  layout: RouteComponent;
+}
+
 interface FynixRouter {
   mountRouter(selector?: string): void;
   navigate(path: string, props?: Record<string, any>): void;
@@ -127,6 +133,7 @@ interface FynixRouter {
   cleanup(): void;
   routes: Record<string, RouteComponent>;
   dynamicRoutes: DynamicRoute[];
+  enableNestedRouting(routes: NestedRoute[]): void;
   // Enterprise features
   clearCache?(): void;
 }
@@ -669,6 +676,7 @@ function createFynix(options: FynixRouterOptions = {}): FynixRouter {
   const modules = tryGlobPaths(isLazy);
   const routes: Record<string, RouteComponent> = {};
   const dynamicRoutes: DynamicRoute[] = [];
+  const nestedLayouts: Map<string, RouteComponent> = new Map();
 
   for (const [filePath, mod] of Object.entries(modules)) {
     const routePath = filePathToRoute(filePath);
@@ -815,9 +823,13 @@ function createFynix(options: FynixRouterOptions = {}): FynixRouter {
       search: window.location.search,
     };
 
-    // Mount the page component
+    // Mount the page component, wrapping in a layout if one is registered
+    const layout = nestedLayouts.get(path);
+    const mountComponent = layout
+      ? (props: any) => layout({ children: Page!(props) })
+      : Page;
     try {
-      mount(Page, rootSelector, safeProps);
+      mount(mountComponent as RouteComponent, rootSelector, safeProps);
     } catch (err) {
       console.error("[Router] Mount failed:", err);
       // Safe error display without innerHTML
@@ -1045,6 +1057,19 @@ function createFynix(options: FynixRouterOptions = {}): FynixRouter {
   // ---------------------- Public Methods ----------------------
 
   /**
+   * Register routes with associated layout components for nested routing.
+   * Each entry's component is added to the route table and its layout is stored
+   * so that mountRouter() wraps the page inside the layout on render.
+   */
+  function enableNestedRouting(routeConfigs: NestedRoute[]): void {
+    for (const config of routeConfigs) {
+      const normalizedPath = normalizePath(config.path || "/");
+      routes[normalizedPath] = config.component;
+      nestedLayouts.set(normalizedPath, config.layout);
+    }
+  }
+
+  /**
    * Mount the router to a DOM element
    */
   function mountRouter(selector: string = "#app-root"): void {
@@ -1158,6 +1183,7 @@ function createFynix(options: FynixRouterOptions = {}): FynixRouter {
     cleanup,
     routes,
     dynamicRoutes,
+    enableNestedRouting,
   };
 
   routerInstance = router;
