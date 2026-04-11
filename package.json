@@ -1,6 +1,6 @@
 {
   "name": "fynixui",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "type": "module",
   "description": "Core package for Fynix UI framework - A lightweight, reactive UI framework with TypeScript support.",
   "main": "./dist/fynix/index.js",

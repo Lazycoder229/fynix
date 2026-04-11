@@ -19,6 +19,7 @@ src/
 ```
 
 **Rules:**
+
 - One component per file
 - Routes use folder-based naming (`/about/view.tsx` → `/about`)
 - Dynamic routes use brackets (`/users/[id]/view.tsx` → `/users/:id`)
@@ -28,16 +29,16 @@ src/
 
 ## Naming Conventions
 
-| Item               | Convention                  | Example                          |
-| ------------------ | --------------------------- | -------------------------------- |
-| Components         | PascalCase                  | `UserProfile`, `StatCard`        |
-| Hook functions     | camelCase with `nix` prefix | `nixState`, `nixEffect`          |
-| Custom hooks       | camelCase with `use` prefix | `useAuth`, `useTheme`            |
-| State variables    | camelCase                   | `isLoading`, `currentUser`       |
-| Event handlers     | camelCase with `handle`     | `handleClick`, `handleSubmit`    |
-| Files              | PascalCase for components   | `UserProfile.tsx`                |
-| Route files        | `view.tsx`                  | `src/about/view.tsx`             |
-| Interfaces         | PascalCase                  | `UserProps`, `TodoItem`          |
+| Item            | Convention                  | Example                       |
+| --------------- | --------------------------- | ----------------------------- |
+| Components      | PascalCase                  | `UserProfile`, `StatCard`     |
+| Hook functions  | camelCase with `nix` prefix | `nixState`, `nixEffect`       |
+| Custom hooks    | camelCase with `use` prefix | `useAuth`, `useTheme`         |
+| State variables | camelCase                   | `isLoading`, `currentUser`    |
+| Event handlers  | camelCase with `handle`     | `handleClick`, `handleSubmit` |
+| Files           | PascalCase for components   | `UserProfile.tsx`             |
+| Route files     | `view.tsx`                  | `src/about/view.tsx`          |
+| Interfaces      | PascalCase                  | `UserProps`, `TodoItem`       |
 
 ---
 
@@ -71,9 +72,12 @@ function Profile(): VNode {
   const user = nixState(null);
   const loading = nixState(true);
   nixEffect(() => {
-    fetch("/api/me").then(r => r.json()).then(u => {
-      user.value = u; loading.value = false;
-    });
+    fetch("/api/me")
+      .then((r) => r.json())
+      .then((u) => {
+        user.value = u;
+        loading.value = false;
+      });
   }, []);
   // ...
 }
@@ -83,9 +87,12 @@ function useCurrentUser() {
   const user = nixState(null);
   const loading = nixState(true);
   nixEffect(() => {
-    fetch("/api/me").then(r => r.json()).then(u => {
-      user.value = u; loading.value = false;
-    });
+    fetch("/api/me")
+      .then((r) => r.json())
+      .then((u) => {
+        user.value = u;
+        loading.value = false;
+      });
   }, []);
   return { user, loading };
 }

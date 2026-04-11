@@ -17,10 +17,7 @@
     "noUncheckedIndexedAccess": true,
     "removeComments": true,
     // Ensure Node types are available for plugins
-    "types": [
-      "node",
-      "vite/client"
-    ]
+    "types": ["node", "vite/client"]
   },
   "include": [
     "runtime.ts",

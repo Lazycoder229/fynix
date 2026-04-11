@@ -35,6 +35,7 @@ app.mountRouter("#app");
 ```
 
 Project structure:
+
 ```
 src/
 ├── dashboard/
@@ -54,7 +55,14 @@ src/
 Create `src/dashboard/view.tsx`:
 
 ```tsx
-import { nixState, nixStore, nixInterval, nixEffect, For, VNode } from "fynixui";
+import {
+  nixState,
+  nixStore,
+  nixInterval,
+  nixEffect,
+  For,
+  VNode,
+} from "fynixui";
 
 interface DashboardStats {
   totalUsers: number;
@@ -65,7 +73,10 @@ interface DashboardStats {
 
 export default function Dashboard(): VNode {
   const stats = nixStore<DashboardStats>("dashboard.stats", {
-    totalUsers: 0, activeNow: 0, revenue: 0, growth: 0,
+    totalUsers: 0,
+    activeNow: 0,
+    revenue: 0,
+    growth: 0,
   });
 
   // Simulate real-time data updates every 5 seconds
@@ -82,9 +93,17 @@ export default function Dashboard(): VNode {
     <div class="dashboard">
       <h1>📊 Dashboard</h1>
       <div class="stats-grid">
-        <StatCard label="Total Users" value={stats.value.totalUsers} icon="👥" />
+        <StatCard
+          label="Total Users"
+          value={stats.value.totalUsers}
+          icon="👥"
+        />
         <StatCard label="Active Now" value={stats.value.activeNow} icon="🟢" />
-        <StatCard label="Revenue" value={`$${stats.value.revenue.toFixed(2)}`} icon="💰" />
+        <StatCard
+          label="Revenue"
+          value={`$${stats.value.revenue.toFixed(2)}`}
+          icon="💰"
+        />
         <StatCard label="Growth" value={`${stats.value.growth}%`} icon="📈" />
       </div>
     </div>
@@ -125,12 +144,13 @@ function ActivityFeed(): VNode {
   );
 
   if (loading.value) return <p>Loading activity...</p>;
-  if (error.value) return (
-    <div>
-      <p class="error">Error: {error.value.message}</p>
-      <button r-click={refetch}>Retry</button>
-    </div>
-  );
+  if (error.value)
+    return (
+      <div>
+        <p class="error">Error: {error.value.message}</p>
+        <button r-click={refetch}>Retry</button>
+      </div>
+    );
 
   return (
     <div class="activity-feed">
@@ -161,13 +181,10 @@ import { nixAsync, VNode } from "fynixui";
 
 // Route meta for SEO
 export default function DetailView(props: { params: { id: string } }): VNode {
-  const { data, loading } = nixAsync(
-    async () => {
-      const res = await fetch(`/api/items/${props.params.id}`);
-      return res.json();
-    },
-    [props.params.id]
-  );
+  const { data, loading } = nixAsync(async () => {
+    const res = await fetch(`/api/items/${props.params.id}`);
+    return res.json();
+  }, [props.params.id]);
 
   if (loading.value) return <p>Loading...</p>;
 
@@ -203,7 +220,9 @@ function NavBar(): VNode {
     <nav>
       <button r-click={() => router.navigate("/dashboard")}>Dashboard</button>
       <button r-click={() => router.navigate("/settings")}>Settings</button>
-      <button r-click={() => router.navigate("/dashboard/42", { source: "nav" })}>
+      <button
+        r-click={() => router.navigate("/dashboard/42", { source: "nav" })}
+      >
         Item 42
       </button>
       <button r-click={() => router.back()}>← Back</button>
@@ -213,6 +232,7 @@ function NavBar(): VNode {
 ```
 
 **Router API:**
+
 - `navigate(path, props?)` — Push navigation with optional props
 - `replace(path, props?)` — Replace current history entry
 - `back()` — Go back in history
@@ -221,6 +241,7 @@ function NavBar(): VNode {
 ---
 
 **Key takeaways:**
+
 - `nixStore` for global cross-component state
 - `nixAsync` for data fetching with loading/error handling
 - `nixInterval` for periodic updates with automatic cleanup

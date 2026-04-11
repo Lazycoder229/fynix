@@ -7,6 +7,7 @@ Build a fully functional Todo application to learn the fundamentals of Fynix.
 ## What You'll Build
 
 A todo app with:
+
 - Add new tasks
 - Mark tasks as complete
 - Delete tasks
@@ -70,10 +71,7 @@ export default function TodoApp(): VNode {
     const text = input.value.trim();
     if (!text) return;
 
-    todos.value = [
-      ...todos.value,
-      { id: Date.now(), text, done: false }
-    ];
+    todos.value = [...todos.value, { id: Date.now(), text, done: false }];
     input.value = "";
   }
 
@@ -84,7 +82,7 @@ export default function TodoApp(): VNode {
         <input
           type="text"
           value={input.value}
-          r-input={(e: any) => input.value = e.target.value}
+          r-input={(e: any) => (input.value = e.target.value)}
           r-keydown={(e: any) => e.key === "Enter" && addTodo()}
           placeholder="What needs to be done?"
         />
@@ -118,20 +116,20 @@ import { nixState, For, VNode } from "fynixui";
       </li>
     )}
   </For>
-</ul>
+</ul>;
 ```
 
 Add these functions before the return:
 
 ```tsx
 function toggleTodo(id: number) {
-  todos.value = todos.value.map(t =>
+  todos.value = todos.value.map((t) =>
     t.id === id ? { ...t, done: !t.done } : t
   );
 }
 
 function deleteTodo(id: number) {
-  todos.value = todos.value.filter(t => t.id !== id);
+  todos.value = todos.value.filter((t) => t.id !== id);
 }
 ```
 
@@ -153,14 +151,17 @@ export default function TodoApp(): VNode {
 
   const filteredTodos = nixComputed(() => {
     switch (filter.value) {
-      case "active":    return todos.value.filter(t => !t.done);
-      case "completed": return todos.value.filter(t => t.done);
-      default:          return todos.value;
+      case "active":
+        return todos.value.filter((t) => !t.done);
+      case "completed":
+        return todos.value.filter((t) => t.done);
+      default:
+        return todos.value;
     }
   });
 
-  const activeCount = nixComputed(() =>
-    todos.value.filter(t => !t.done).length
+  const activeCount = nixComputed(
+    () => todos.value.filter((t) => !t.done).length
   );
 
   // ... addTodo, toggleTodo, deleteTodo functions
@@ -172,12 +173,24 @@ export default function TodoApp(): VNode {
       {/* Input row (from Step 2) */}
 
       <div class="filters">
-        <button r-click={() => filter.value = "all"}
-          class={filter.value === "all" ? "active" : ""}>All</button>
-        <button r-click={() => filter.value = "active"}
-          class={filter.value === "active" ? "active" : ""}>Active</button>
-        <button r-click={() => filter.value = "completed"}
-          class={filter.value === "completed" ? "active" : ""}>Done</button>
+        <button
+          r-click={() => (filter.value = "all")}
+          class={filter.value === "all" ? "active" : ""}
+        >
+          All
+        </button>
+        <button
+          r-click={() => (filter.value = "active")}
+          class={filter.value === "active" ? "active" : ""}
+        >
+          Active
+        </button>
+        <button
+          r-click={() => (filter.value = "completed")}
+          class={filter.value === "completed" ? "active" : ""}
+        >
+          Done
+        </button>
       </div>
 
       <ul class="todo-list">
@@ -208,6 +221,7 @@ export default function TodoApp(): VNode {
 See the full working code: [TodoApp view.tsx](./examples/todo-app.tsx)
 
 **Key takeaways:**
+
 - `nixState` for mutable reactive data
 - `nixComputed` for derived/filtered data
 - `<For>` for efficient list rendering

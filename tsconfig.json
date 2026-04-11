@@ -5,11 +5,7 @@
   "compilerOptions": {
     // Language and Environment
     "target": "ES2020",
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     // JSX Configuration
@@ -29,14 +25,10 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": false,
     // Module Resolution
-  
+
     "paths": {
-      "fynixui": [
-        "./runtime.ts"
-      ],
-      "fynixui/*": [
-        "./*"
-      ]
+      "fynixui": ["./runtime.ts"],
+      "fynixui/*": ["./*"]
     },
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
@@ -60,10 +52,7 @@
     "verbatimModuleSyntax": false,
     "forceConsistentCasingInFileNames": true,
     // Type Roots - Your existing types folder
-    "typeRoots": [
-      "./node_modules/@types",
-      "./types"
-    ],
+    "typeRoots": ["./node_modules/@types", "./types"],
     // "types": [
     //   "node"
     // ],
@@ -82,11 +71,5 @@
     "../vite-plugin-res.ts",
     "**/*.tsx"
   ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build",
-    "**/*.test.ts",
-    "**/*.spec.ts"
-  ]
+  "exclude": ["node_modules", "dist", "build", "**/*.test.ts", "**/*.spec.ts"]
 }

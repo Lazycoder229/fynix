@@ -11,8 +11,8 @@ interface ReactiveState<T> {
 interface ForProps<T> {
   each: T[] | ReactiveState<T[]>;
   children?:
-  | ((item: T, index: number) => VNode)
-  | ((item: T, index: number) => VNode)[];
+    | ((item: T, index: number) => VNode)
+    | ((item: T, index: number) => VNode)[];
 }
 
 export function For<T>(props: ForProps<T>): VNode {

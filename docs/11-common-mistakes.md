@@ -48,8 +48,8 @@ function MyComponent(): VNode {
 
 // ✅ CORRECT: All hooks at the top level
 function MyComponent(): VNode {
-  const data = nixState(null);    // Always called
-  const count = nixState(0);      // Always called
+  const data = nixState(null); // Always called
+  const count = nixState(0); // Always called
   // Use conditionals in the return, not around hooks
 }
 ```
@@ -84,7 +84,7 @@ nixEffect(() => {
 element.innerHTML = userInput;
 
 // ✅ CORRECT: Use VNode children
-<div>{userInput}</div>
+<div>{userInput}</div>;
 ```
 
 **Why:** `innerHTML` is a primary XSS attack vector. Fynix auto-sanitizes text content in VNodes.

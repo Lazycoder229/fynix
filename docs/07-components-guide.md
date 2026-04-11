@@ -9,18 +9,19 @@ A reference for all reusable components encountered in the project tutorials.
 **Purpose:** Efficiently renders arrays of items with automatic keying.
 
 **Props:**
-| Prop       | Type                                      | Description                          |
+| Prop | Type | Description |
 | ---------- | ----------------------------------------- | ------------------------------------ |
-| `each`     | `T[]` or `ReactiveState<T[]>`             | Array to iterate over                |
-| `children` | `(item: T, index: number) => VNode`       | Render function for each item        |
+| `each` | `T[]` or `ReactiveState<T[]>` | Array to iterate over |
+| `children` | `(item: T, index: number) => VNode` | Render function for each item |
 
 **Example:**
+
 ```tsx
 import { For } from "fynixui";
 
 <For each={items.value}>
   {(item, index) => <div key={item.id}>{item.name}</div>}
-</For>
+</For>;
 ```
 
 **Where it's used:** Todo list (Project 1), Notes grid (Project 2), Activity feed (Project 3)
@@ -34,12 +35,13 @@ import { For } from "fynixui";
 **Purpose:** Shows a fallback while lazy-loaded components are loading.
 
 **Props:**
-| Prop       | Type    | Description                            |
+| Prop | Type | Description |
 | ---------- | ------- | -------------------------------------- |
-| `fallback` | `VNode` | Content to show while loading          |
-| `children` | `VNode` | The lazy component to render           |
+| `fallback` | `VNode` | Content to show while loading |
+| `children` | `VNode` | The lazy component to render |
 
 **Example:**
+
 ```tsx
 import { nixLazy, Suspense } from "fynixui";
 
@@ -63,10 +65,11 @@ function Dashboard(): VNode {
 **Purpose:** Pre-styled, accessible button with delegated events.
 
 **Example:**
+
 ```tsx
 import { Button } from "fynixui/custom";
 
-<Button r-click={handleSave}>Save</Button>
+<Button r-click={handleSave}>Save</Button>;
 ```
 
 **Where it's used:** Available as a built-in custom component.
@@ -78,12 +81,13 @@ import { Button } from "fynixui/custom";
 **Purpose:** Declarative navigation link that integrates with the Fynix router.
 
 **Example:**
+
 ```tsx
 import { Path } from "fynixui/custom";
 
 <Path href="/dashboard" props={{ tab: "overview" }}>
   Go to Dashboard
-</Path>
+</Path>;
 ```
 
 **Where it's used:** Navigation between pages (Project 3)
@@ -119,10 +123,11 @@ export function Card(props: CardProps): VNode {
 // 3. Usage
 <Card title="My Card" variant="highlighted">
   <p>Card content here</p>
-</Card>
+</Card>;
 ```
 
 **Guidelines:**
+
 - Accept props as the first argument
 - Return a `VNode`
 - Use TypeScript interfaces for prop types

@@ -25,10 +25,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * Core VNode type for Fynix virtual DOM
  */
 export type VNode = {
-    type: string | symbol | ((props: any) => any);
-    props: Record<string, any>;
-    key: string | number | null;
-    _domNode?: Node;
-    _rendered?: VNode;
-    _state?: any;
+  type: string | symbol | ((props: any) => any);
+  props: Record<string, any>;
+  key: string | number | null;
+  _domNode?: Node;
+  _rendered?: VNode;
+  _state?: any;
 };

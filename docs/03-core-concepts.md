@@ -18,10 +18,11 @@ function Greeting(props: { name: string }): VNode {
 }
 
 // Usage
-<Greeting name="Alice" />
+<Greeting name="Alice" />;
 ```
 
 **Rules:**
+
 - Must return a `VNode` (or use `Fragment` for multiple elements)
 - Props are passed as the first argument
 - Hooks must be called at the top level (not inside conditionals)
@@ -46,13 +47,14 @@ function Counter(): VNode {
     <div>
       <p>Count: {count}</p>
       <button r-click={() => count.value++}>+1</button>
-      <button r-click={() => count.value = 0}>Reset</button>
+      <button r-click={() => (count.value = 0)}>Reset</button>
     </div>
   );
 }
 ```
 
 **Key points:**
+
 - Read via `count.value` (or just `{count}` in JSX — auto-unwraps)
 - Write via `count.value = newValue`
 - Only the subscribing component's fiber is re-rendered, not the whole tree
@@ -88,10 +90,10 @@ function Timer(): VNode {
 ```
 
 **Variants:**
-| Hook             | Behavior                           |
+| Hook | Behavior |
 | ---------------- | ---------------------------------- |
-| `nixEffect`      | Runs when dependencies change      |
-| `nixEffectOnce`  | Runs once on mount                 |
+| `nixEffect` | Runs when dependencies change |
+| `nixEffectOnce` | Runs once on mount |
 | `nixEffectAlways` | Runs on every render (use sparingly) |
 
 > **Used in:** Timer in Todo App, API fetching in Dashboard
@@ -162,13 +164,10 @@ Under the hood, JSX compiles to `h()` calls:
 <div id="app">
   <MyComponent name="Alice" />
   Hello
-</div>
+</div>;
 
 // Compiles to:
-h("div", { id: "app" },
-  h(MyComponent, { name: "Alice" }),
-  "Hello"
-);
+h("div", { id: "app" }, h(MyComponent, { name: "Alice" }), "Hello");
 ```
 
 You can use `h()` directly if you prefer:
@@ -177,7 +176,9 @@ You can use `h()` directly if you prefer:
 import { h, VNode } from "fynixui";
 
 function App(): VNode {
-  return h("div", { class: "app" },
+  return h(
+    "div",
+    { class: "app" },
     h("h1", null, "Hello World"),
     h("p", null, "Built with Fynix")
   );

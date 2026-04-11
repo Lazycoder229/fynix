@@ -10,15 +10,15 @@ Complete reference for all Fynix hooks, functions, and core APIs.
 
 Creates a VNode (virtual DOM element).
 
-| Parameter  | Type                            | Description                     |
-| ---------- | ------------------------------- | ------------------------------- |
-| `type`     | `string \| symbol \| Function` | Element type or component       |
-| `props`    | `object \| null`               | Props/attributes                |
-| `children` | `VNodeChildren[]`              | Child elements                  |
-| **Returns** | `VNode`                        | Virtual DOM node               |
+| Parameter   | Type                           | Description               |
+| ----------- | ------------------------------ | ------------------------- |
+| `type`      | `string \| symbol \| Function` | Element type or component |
+| `props`     | `object \| null`               | Props/attributes          |
+| `children`  | `VNodeChildren[]`              | Child elements            |
+| **Returns** | `VNode`                        | Virtual DOM node          |
 
 ```tsx
-h("div", { id: "app" }, h("p", null, "Hello"))
+h("div", { id: "app" }, h("p", null, "Hello"));
 ```
 
 ### `Fynix`
@@ -27,7 +27,9 @@ Alias for `h`. Use as JSX pragma:
 
 ```tsx
 // tsconfig.json: "jsxFactory": "Fynix"
-<div id="app"><p>Hello</p></div>
+<div id="app">
+  <p>Hello</p>
+</div>
 ```
 
 ### `Fragment`
@@ -35,17 +37,20 @@ Alias for `h`. Use as JSX pragma:
 Symbol for grouping elements without a wrapper DOM node.
 
 ```tsx
-<>{child1}{child2}</>
+<>
+  {child1}
+  {child2}
+</>
 ```
 
 ### `mount(vnode, container)`
 
 Mounts a VNode tree into a DOM element.
 
-| Parameter   | Type          | Description              |
-| ----------- | ------------- | ------------------------ |
-| `vnode`     | `VNode`       | Root VNode to render     |
-| `container` | `HTMLElement` | Target DOM container     |
+| Parameter   | Type          | Description          |
+| ----------- | ------------- | -------------------- |
+| `vnode`     | `VNode`       | Root VNode to render |
+| `container` | `HTMLElement` | Target DOM container |
 
 ```tsx
 mount(h(App, null), document.getElementById("app"));
@@ -55,12 +60,15 @@ mount(h(App, null), document.getElementById("app"));
 
 Batches multiple state updates into a single re-render.
 
-| Parameter | Type         | Description                    |
-| --------- | ------------ | ------------------------------ |
-| `fn`      | `() => void` | Function containing updates    |
+| Parameter | Type         | Description                 |
+| --------- | ------------ | --------------------------- |
+| `fn`      | `() => void` | Function containing updates |
 
 ```tsx
-batchUpdates(() => { a.value = 1; b.value = 2; });
+batchUpdates(() => {
+  a.value = 1;
+  b.value = 2;
+});
 ```
 
 ---
@@ -71,34 +79,34 @@ batchUpdates(() => { a.value = 1; b.value = 2; });
 
 Creates reactive state that triggers re-renders on change.
 
-| Parameter | Type | Description     |
-| --------- | ---- | --------------- |
-| `initial` | `T`  | Initial value   |
+| Parameter | Type | Description   |
+| --------- | ---- | ------------- |
+| `initial` | `T`  | Initial value |
 
 **Returns:**
 
-| Property            | Type                              | Description                     |
-| ------------------- | --------------------------------- | ------------------------------- |
-| `.value`            | `T` (get/set)                     | Current value                   |
-| `.subscribe(fn)`    | `(fn) => () => void`             | Subscribe to changes            |
-| `.cleanup()`        | `() => void`                     | Destroy state and subscriptions |
-| `.asReadOnly()`     | `ReadOnlyState<T>`               | Read-only version               |
-| `.getSubscriberCount()` | `() => number`              | Number of subscribers           |
-| `.isDestroyed()`    | `() => boolean`                  | Whether state is destroyed      |
+| Property                | Type                 | Description                     |
+| ----------------------- | -------------------- | ------------------------------- |
+| `.value`                | `T` (get/set)        | Current value                   |
+| `.subscribe(fn)`        | `(fn) => () => void` | Subscribe to changes            |
+| `.cleanup()`            | `() => void`         | Destroy state and subscriptions |
+| `.asReadOnly()`         | `ReadOnlyState<T>`   | Read-only version               |
+| `.getSubscriberCount()` | `() => number`       | Number of subscribers           |
+| `.isDestroyed()`        | `() => boolean`      | Whether state is destroyed      |
 
 ```tsx
 const count = nixState(0);
-count.value++;           // triggers re-render
-count.value = 10;        // triggers re-render
+count.value++; // triggers re-render
+count.value = 10; // triggers re-render
 ```
 
 ### `nixComputed<T>(computeFn): ComputedState<T>`
 
 Creates derived state that auto-updates when dependencies change.
 
-| Parameter   | Type       | Description              |
-| ----------- | ---------- | ------------------------ |
-| `computeFn` | `() => T`  | Computation function     |
+| Parameter   | Type      | Description          |
+| ----------- | --------- | -------------------- |
+| `computeFn` | `() => T` | Computation function |
 
 ```tsx
 const doubled = nixComputed(() => count.value * 2);
@@ -109,10 +117,10 @@ console.log(doubled.value); // auto-recomputes
 
 Global reactive store accessible by path name across components.
 
-| Parameter | Type     | Description              |
-| --------- | -------- | ------------------------ |
-| `path`    | `string` | Unique store identifier  |
-| `initial` | `T`      | Initial value            |
+| Parameter | Type     | Description             |
+| --------- | -------- | ----------------------- |
+| `path`    | `string` | Unique store identifier |
+| `initial` | `T`      | Initial value           |
 
 ```tsx
 const theme = nixStore("app.theme", "dark");
@@ -122,10 +130,10 @@ const theme = nixStore("app.theme", "dark");
 
 Reactive state synced with `localStorage`.
 
-| Parameter | Type     | Description                        |
-| --------- | -------- | ---------------------------------- |
-| `key`     | `string` | localStorage key                   |
-| `initial` | `T`      | Fallback if key doesn't exist      |
+| Parameter | Type     | Description                   |
+| --------- | -------- | ----------------------------- |
+| `key`     | `string` | localStorage key              |
+| `initial` | `T`      | Fallback if key doesn't exist |
 
 **Returns:** `{ value: T, set(v): boolean, clear(): void, getSize(): number, isValid(): boolean }`
 
@@ -142,10 +150,10 @@ settings.set({ dark: true }); // persists to localStorage
 
 Runs side effects with dependency tracking and cleanup.
 
-| Parameter | Type                              | Description                     |
-| --------- | --------------------------------- | ------------------------------- |
-| `effect`  | `() => void \| (() => void)`     | Effect function (may return cleanup) |
-| `deps`    | `any[]`                          | Dependency array                |
+| Parameter | Type                         | Description                          |
+| --------- | ---------------------------- | ------------------------------------ |
+| `effect`  | `() => void \| (() => void)` | Effect function (may return cleanup) |
+| `deps`    | `any[]`                      | Dependency array                     |
 
 ```tsx
 nixEffect(() => {
@@ -166,10 +174,10 @@ Runs effect on every render. Use sparingly.
 
 Runs a callback at an interval with automatic cleanup on unmount.
 
-| Parameter  | Type         | Description                |
-| ---------- | ------------ | -------------------------- |
-| `callback` | `() => void` | Function to call           |
-| `ms`       | `number`     | Interval in milliseconds   |
+| Parameter  | Type         | Description              |
+| ---------- | ------------ | ------------------------ |
+| `callback` | `() => void` | Function to call         |
+| `ms`       | `number`     | Interval in milliseconds |
 
 ---
 
@@ -179,10 +187,10 @@ Runs a callback at an interval with automatic cleanup on unmount.
 
 Memoizes a computed value. Recomputes only when dependencies change.
 
-| Parameter | Type       | Description              |
-| --------- | ---------- | ------------------------ |
-| `factory` | `() => T`  | Value factory function   |
-| `deps`    | `any[]`    | Dependency array         |
+| Parameter | Type      | Description            |
+| --------- | --------- | ---------------------- |
+| `factory` | `() => T` | Value factory function |
+| `deps`    | `any[]`   | Dependency array       |
 
 ```tsx
 const sorted = nixMemo(() => items.sort(compareFn), [items]);
@@ -192,10 +200,10 @@ const sorted = nixMemo(() => items.sort(compareFn), [items]);
 
 Memoizes a callback function reference. Prevents unnecessary child re-renders.
 
-| Parameter | Type         | Description              |
-| --------- | ------------ | ------------------------ |
-| `fn`      | `Function`   | Callback to memoize     |
-| `deps`    | `any[]`      | Dependency array         |
+| Parameter | Type       | Description         |
+| --------- | ---------- | ------------------- |
+| `fn`      | `Function` | Callback to memoize |
+| `deps`    | `any[]`    | Dependency array    |
 
 ```tsx
 const handleClick = nixCallback(() => save(id), [id]);
@@ -257,24 +265,27 @@ Full-featured form handler with validation.
 
 **Returns:**
 
-| Property          | Description                                |
-| ----------------- | ------------------------------------------ |
-| `values`          | `NixState<T>` — form values               |
-| `errors`          | `NixState<Errors>` — validation errors     |
-| `touched`         | `NixState<Touched>` — touched fields       |
-| `isSubmitting`    | `NixState<boolean>` — submit in progress   |
-| `isValid`         | `ComputedState<boolean>` — form validity   |
-| `handleChange(field, value)` | Update a field              |
-| `handleBlur(field)`          | Mark field as touched       |
-| `handleSubmit(onSubmit)`     | Validate and submit         |
-| `cancelSubmit()`  | Abort in-flight submit                     |
-| `reset()`         | Reset form to initial values               |
-| `getFieldProps(field)` | Get `value`, `r-input`, `r-blur` bindings |
+| Property                     | Description                               |
+| ---------------------------- | ----------------------------------------- |
+| `values`                     | `NixState<T>` — form values               |
+| `errors`                     | `NixState<Errors>` — validation errors    |
+| `touched`                    | `NixState<Touched>` — touched fields      |
+| `isSubmitting`               | `NixState<boolean>` — submit in progress  |
+| `isValid`                    | `ComputedState<boolean>` — form validity  |
+| `handleChange(field, value)` | Update a field                            |
+| `handleBlur(field)`          | Mark field as touched                     |
+| `handleSubmit(onSubmit)`     | Validate and submit                       |
+| `cancelSubmit()`             | Abort in-flight submit                    |
+| `reset()`                    | Reset form to initial values              |
+| `getFieldProps(field)`       | Get `value`, `r-input`, `r-blur` bindings |
 
 ```tsx
-const form = nixForm({ email: "" }, {
-  email: { required: true, pattern: /^\S+@\S+$/, message: "Invalid email" }
-});
+const form = nixForm(
+  { email: "" },
+  {
+    email: { required: true, pattern: /^\S+@\S+$/, message: "Invalid email" },
+  }
+);
 ```
 
 ### `nixDebounce(fn, delay)`
@@ -293,30 +304,30 @@ const search = nixDebounce((q) => fetchResults(q), 300);
 
 Creates (or returns existing) router instance.
 
-| Option | Type      | Description                    |
-| ------ | --------- | ------------------------------ |
-| `lazy` | `boolean` | Enable lazy route loading      |
+| Option | Type      | Description               |
+| ------ | --------- | ------------------------- |
+| `lazy` | `boolean` | Enable lazy route loading |
 
 **Returns:**
 
-| Method                  | Description                                |
-| ----------------------- | ------------------------------------------ |
-| `mountRouter(selector)` | Mount router to DOM element                |
-| `navigate(path, props)` | Push navigation                            |
-| `replace(path, props)`  | Replace current entry                      |
-| `back()`                | Go back in history                         |
-| `cleanup()`             | Destroy router and all listeners           |
+| Method                  | Description                      |
+| ----------------------- | -------------------------------- |
+| `mountRouter(selector)` | Mount router to DOM element      |
+| `navigate(path, props)` | Push navigation                  |
+| `replace(path, props)`  | Replace current entry            |
+| `back()`                | Go back in history               |
+| `cleanup()`             | Destroy router and all listeners |
 
 ### `location` (LocationManager)
 
 Reactive signal for current route information.
 
-| Property       | Type                            | Description           |
-| -------------- | ------------------------------- | --------------------- |
-| `.value.path`  | `string`                        | Current pathname      |
-| `.value.params`| `Record<string, string>`        | URL parameters        |
-| `.value.search`| `string`                        | Query string          |
-| `.subscribe()` | `(cb) => () => void`           | Subscribe to changes  |
+| Property        | Type                     | Description          |
+| --------------- | ------------------------ | -------------------- |
+| `.value.path`   | `string`                 | Current pathname     |
+| `.value.params` | `Record<string, string>` | URL parameters       |
+| `.value.search` | `string`                 | Query string         |
+| `.subscribe()`  | `(cb) => () => void`     | Subscribe to changes |
 
 ---
 
@@ -344,7 +355,10 @@ Configure global error behavior.
 
 ```tsx
 configureErrorHandling({
-  onRenderError: (error, component) => { log(error); return true; },
+  onRenderError: (error, component) => {
+    log(error);
+    return true;
+  },
   showOverlay: process.env.NODE_ENV !== "production",
 });
 ```

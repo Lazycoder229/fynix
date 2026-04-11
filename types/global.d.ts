@@ -259,7 +259,6 @@ declare module "*.webp" {
  * Fynix-specific module patterns
  */
 
-
 declare module "*.js" {
   const Component: any;
   export default Component;
@@ -276,4 +275,3 @@ declare module "*.ts" {
  * Vite client types
  */
 /// <reference types="vite/client" />
-

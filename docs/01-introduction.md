@@ -1,7 +1,9 @@
 # Fynix — Official Documentation
+
 #cd core
-npm version patch  # or minor/major
+npm version patch # or minor/major
 git push origin main --tags
+
 > A lightweight, fiber-based reactive UI framework with built-in security and fine-grained reactivity.
 
 ---
@@ -23,14 +25,14 @@ Fynix is a modern web UI framework built from the ground up on **fiber architect
 
 ## Quick Facts
 
-| Aspect               | Status                    |
-| -------------------- | ------------------------- |
-| **Build Size**       | ~15KB gzipped             |
-| **External Deps**    | 0                         |
-| **TypeScript**       | Full support              |
-| **Browser Support**  | Modern browsers           |
-| **Security**         | Built-in XSS protection   |
-| **License**          | MIT                       |
+| Aspect              | Status                  |
+| ------------------- | ----------------------- |
+| **Build Size**      | ~15KB gzipped           |
+| **External Deps**   | 0                       |
+| **TypeScript**      | Full support            |
+| **Browser Support** | Modern browsers         |
+| **Security**        | Built-in XSS protection |
+| **License**         | MIT                     |
 
 ---
 
@@ -65,16 +67,16 @@ Fynix is a modern web UI framework built from the ground up on **fiber architect
 
 ## What You'll Learn in This Documentation
 
-| Section                   | Description                                           |
-| ------------------------- | ----------------------------------------------------- |
-| **Getting Started**       | Install, setup, and your first Hello World            |
-| **Core Concepts**         | Components, state, effects, rendering                 |
-| **Project Tutorials**     | Build 3 real apps (Todo, Notes Manager, Dashboard)    |
-| **Components Guide**      | Reusable components used across projects              |
-| **API Reference**         | Every function, hook, and method documented           |
-| **Advanced Guides**       | State patterns, optimization, project structure       |
-| **Best Practices**        | Conventions, naming, folder structure                 |
-| **Common Mistakes**       | What to avoid and why                                 |
+| Section               | Description                                        |
+| --------------------- | -------------------------------------------------- |
+| **Getting Started**   | Install, setup, and your first Hello World         |
+| **Core Concepts**     | Components, state, effects, rendering              |
+| **Project Tutorials** | Build 3 real apps (Todo, Notes Manager, Dashboard) |
+| **Components Guide**  | Reusable components used across projects           |
+| **API Reference**     | Every function, hook, and method documented        |
+| **Advanced Guides**   | State patterns, optimization, project structure    |
+| **Best Practices**    | Conventions, naming, folder structure              |
+| **Common Mistakes**   | What to avoid and why                              |
 
 ---
 

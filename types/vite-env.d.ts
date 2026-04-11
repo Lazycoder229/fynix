@@ -542,4 +542,4 @@ declare global {
 }
 
 // Ensure this is treated as a module
-export { };
+export {};

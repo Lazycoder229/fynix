@@ -36,10 +36,10 @@ Use `nixComputed` to avoid duplicating logic:
 
 ```tsx
 // ❌ Bad: duplicated filter logic
-const activeItems = nixState(items.value.filter(i => i.active));
+const activeItems = nixState(items.value.filter((i) => i.active));
 
 // ✅ Good: derived from source of truth
-const activeItems = nixComputed(() => items.value.filter(i => i.active));
+const activeItems = nixComputed(() => items.value.filter((i) => i.active));
 ```
 
 ### Pattern 4: Persistent State
@@ -58,8 +58,8 @@ preferences.set({ ...preferences.value, fontSize: 16 });
 ### 1. Memoize Expensive Computations
 
 ```tsx
-const sorted = nixMemo(() =>
-  [...largeArray].sort((a, b) => a.name.localeCompare(b.name)),
+const sorted = nixMemo(
+  () => [...largeArray].sort((a, b) => a.name.localeCompare(b.name)),
   [largeArray]
 );
 ```
@@ -68,11 +68,11 @@ const sorted = nixMemo(() =>
 
 ```tsx
 // ❌ New function every render — child re-renders needlessly
-<ChildComponent onSave={() => save(id)} />
+<ChildComponent onSave={() => save(id)} />;
 
 // ✅ Stable reference — child skips re-render
 const onSave = nixCallback(() => save(id), [id]);
-<ChildComponent onSave={onSave} />
+<ChildComponent onSave={onSave} />;
 ```
 
 ### 3. Debounce High-Frequency Updates
@@ -82,7 +82,7 @@ const debouncedSearch = nixDebounce((query) => {
   results.value = search(query);
 }, 300);
 
-<input r-input={(e) => debouncedSearch(e.target.value)} />
+<input r-input={(e) => debouncedSearch(e.target.value)} />;
 ```
 
 ### 4. Lazy Load Heavy Components
@@ -92,7 +92,7 @@ const HeavyChart = nixLazy(() => import("./Chart"));
 
 <Suspense fallback={<Spinner />}>
   <HeavyChart data={chartData} />
-</Suspense>
+</Suspense>;
 ```
 
 ### 5. Use Batch Updates for Multiple Changes
@@ -137,7 +137,7 @@ function Layout(props: { header: VNode; children: VNode[] }): VNode {
 // Usage
 <Layout header={<NavBar />}>
   <Dashboard />
-</Layout>
+</Layout>;
 ```
 
 ### Higher-Order Component Pattern
@@ -146,7 +146,9 @@ function Layout(props: { header: VNode; children: VNode[] }): VNode {
 function withLoading(Component: ComponentFunction) {
   return function Wrapped(props: any): VNode {
     const loading = nixState(true);
-    nixEffectOnce(() => { setTimeout(() => loading.value = false, 500); });
+    nixEffectOnce(() => {
+      setTimeout(() => (loading.value = false), 500);
+    });
 
     if (loading.value) return <p>Loading...</p>;
     return <Component {...props} />;
@@ -168,7 +170,7 @@ src/
 │   └── Modal.tsx
 ├── hooks/               ← Custom hooks
 │   └── useAuth.ts
-├── stores/              ← Global state definitions  
+├── stores/              ← Global state definitions
 │   └── authStore.ts
 ├── home/
 │   └── view.tsx         ← Route: /

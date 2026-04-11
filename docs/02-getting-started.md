@@ -26,6 +26,7 @@ npm install fynixui
 ```
 
 **Requirements:**
+
 - Node.js ≥ 18.0.0
 - npm ≥ 9.0.0
 
@@ -71,6 +72,7 @@ export default function Home(): VNode {
 ```
 
 **What's happening:**
+
 1. We import `VNode` — the type for Fynix virtual DOM nodes
 2. We export a function component that returns JSX
 3. Fynix's JSX pragma converts this to `h()` calls under the hood
@@ -94,14 +96,14 @@ And in your `index.html`:
 ```html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>My Fynix App</title>
-</head>
-<body>
-  <div id="app"></div>
-  <script type="module" src="/src/main.ts"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Fynix App</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>
 ```
 
@@ -122,15 +124,14 @@ export default function Home(): VNode {
   return (
     <div>
       <h1>Count: {count}</h1>
-      <button r-click={() => count.value++}>
-        Increment
-      </button>
+      <button r-click={() => count.value++}>Increment</button>
     </div>
   );
 }
 ```
 
 **What's new:**
+
 - `nixState(0)` creates a reactive state initialized to `0`
 - `{count}` in JSX automatically displays the value and subscribes to changes
 - `r-click` is Fynix's secure event handler (replaces `onclick`)

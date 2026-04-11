@@ -1,17 +1,26 @@
-type ButtonVariant = "primary" | "secondary" | "success" | "danger" | "warning" | "info" | "light" | "dark" | "link";
+type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "success"
+  | "danger"
+  | "warning"
+  | "info"
+  | "light"
+  | "dark"
+  | "link";
 type ButtonSize = "sm" | "md" | "lg";
 interface ButtonProps {
-    value?: string;
-    type?: "button" | "submit" | "reset";
-    disabled?: boolean;
-    variant?: ButtonVariant;
-    size?: ButtonSize;
-    outline?: boolean;
-    style?: Record<string, string>;
-    class?: string;
-    rc?: string;
-    "r-click"?: (this: HTMLElement, event: MouseEvent) => void;
-    [key: string]: any;
+  value?: string;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  outline?: boolean;
+  style?: Record<string, string>;
+  class?: string;
+  rc?: string;
+  "r-click"?: (this: HTMLElement, event: MouseEvent) => void;
+  [key: string]: any;
 }
 export declare function Button({ value, ...props }: ButtonProps): any;
 export declare const PrimaryButton: (p: ButtonProps) => any;

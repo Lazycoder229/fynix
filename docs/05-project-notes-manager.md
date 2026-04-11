@@ -45,9 +45,10 @@ export default function NotesManager(): VNode {
   const filteredNotes = nixComputed(() => {
     const query = searchQuery.value.toLowerCase();
     if (!query) return notes.value;
-    return notes.value.filter(n =>
-      n.title.toLowerCase().includes(query) ||
-      n.content.toLowerCase().includes(query)
+    return notes.value.filter(
+      (n) =>
+        n.title.toLowerCase().includes(query) ||
+        n.content.toLowerCase().includes(query)
     );
   });
 
@@ -73,8 +74,16 @@ import { nixForm } from "fynixui/hooks/nixForm";
 const form = nixForm(
   { title: "", content: "" },
   {
-    title:   { required: true, minLength: 2, message: "Title is required (min 2 chars)" },
-    content: { required: true, minLength: 5, message: "Content is required (min 5 chars)" },
+    title: {
+      required: true,
+      minLength: 2,
+      message: "Title is required (min 2 chars)",
+    },
+    content: {
+      required: true,
+      minLength: 5,
+      message: "Content is required (min 5 chars)",
+    },
   }
 );
 
@@ -96,7 +105,12 @@ function createNote() {
 **Form JSX:**
 
 ```tsx
-<form r-submit={(e: any) => { e.preventDefault(); createNote(); }}>
+<form
+  r-submit={(e: any) => {
+    e.preventDefault();
+    createNote();
+  }}
+>
   <div class="field">
     <input
       type="text"
@@ -141,7 +155,7 @@ const debouncedSearch = nixDebounce((value: string) => {
   type="search"
   placeholder="Search notes..."
   r-input={(e: any) => debouncedSearch(e.target.value)}
-/>
+/>;
 ```
 
 **Concept introduced:** `nixDebounce` delays execution until the user stops typing for 300ms, preventing excessive re-renders during fast typing.
@@ -154,15 +168,15 @@ const debouncedSearch = nixDebounce((value: string) => {
 const editingId = nixState<string | null>(null);
 
 function deleteNote(id: string) {
-  notes.set(notes.value.filter(n => n.id !== id));
+  notes.set(notes.value.filter((n) => n.id !== id));
 }
 
 function updateNote(id: string, title: string, content: string) {
-  notes.set(notes.value.map(n =>
-    n.id === id
-      ? { ...n, title, content, updatedAt: Date.now() }
-      : n
-  ));
+  notes.set(
+    notes.value.map((n) =>
+      n.id === id ? { ...n, title, content, updatedAt: Date.now() } : n
+    )
+  );
   editingId.value = null;
 }
 ```
@@ -175,14 +189,20 @@ function updateNote(id: string, title: string, content: string) {
     {(note) => (
       <div key={note.id} class="note-card">
         {editingId.value === note.id ? (
-          <NoteEditor note={note} onSave={updateNote} onCancel={() => editingId.value = null} />
+          <NoteEditor
+            note={note}
+            onSave={updateNote}
+            onCancel={() => (editingId.value = null)}
+          />
         ) : (
           <div>
             <h3>{note.title}</h3>
             <p>{note.content}</p>
             <small>{new Date(note.updatedAt).toLocaleDateString()}</small>
             <div class="actions">
-              <button r-click={() => editingId.value = note.id}>✏️ Edit</button>
+              <button r-click={() => (editingId.value = note.id)}>
+                ✏️ Edit
+              </button>
               <button r-click={() => deleteNote(note.id)}>🗑️ Delete</button>
             </div>
           </div>
@@ -210,9 +230,17 @@ function NoteEditor(props: NoteEditorProps): VNode {
 
   return (
     <div class="note-editor">
-      <input value={title.value} r-input={(e: any) => title.value = e.target.value} />
-      <textarea value={content.value} r-input={(e: any) => content.value = e.target.value} />
-      <button r-click={() => props.onSave(props.note.id, title.value, content.value)}>
+      <input
+        value={title.value}
+        r-input={(e: any) => (title.value = e.target.value)}
+      />
+      <textarea
+        value={content.value}
+        r-input={(e: any) => (content.value = e.target.value)}
+      />
+      <button
+        r-click={() => props.onSave(props.note.id, title.value, content.value)}
+      >
         💾 Save
       </button>
       <button r-click={props.onCancel}>Cancel</button>
@@ -226,6 +254,7 @@ function NoteEditor(props: NoteEditorProps): VNode {
 ---
 
 **Key takeaways:**
+
 - `nixLocalStorage` for persistence across page reloads
 - `nixForm` for validated form handling with async submit
 - `nixDebounce` for performance-optimized search

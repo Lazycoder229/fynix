@@ -1,1 +1,4 @@
-export declare function nixMemo<T>(factory: () => T, deps?: any[]): T | undefined;
+export declare function nixMemo<T>(
+  factory: () => T,
+  deps?: any[]
+): T | undefined;
