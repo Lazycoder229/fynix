@@ -71,13 +71,15 @@ export async function renderToHTML(node: unknown): Promise<string> {
     const { children, ...attrs } = vnode.props || {};
 
     let attrStr = "";
+    const attrParts: string[] = [];
     for (const [name, value] of Object.entries(attrs)) {
       if (BOOLEAN_ATTRS.has(name)) {
-        if (value) attrStr += ` ${name}`;
+        if (value) attrParts.push(name);
       } else if (value != null && value !== false) {
-        attrStr += ` ${name}="${escapeHTML(String(value))}"`;
+        attrParts.push(`${name}="${escapeHTML(String(value))}"`);
       }
     }
+    attrStr = attrParts.length > 0 ? " " + attrParts.join(" ") : "";
 
     if (SELF_CLOSING_TAGS.has(tag)) {
       return `<${tag}${attrStr}>`;

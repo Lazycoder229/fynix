@@ -1063,7 +1063,7 @@ function createFynix(options: FynixRouterOptions = {}): FynixRouter {
    */
   function enableNestedRouting(routeConfigs: NestedRoute[]): void {
     for (const config of routeConfigs) {
-      const normalizedPath = normalizePath(config.path || "/");
+      const normalizedPath = normalizePath(config.path ?? "");
       routes[normalizedPath] = config.component;
       nestedLayouts.set(normalizedPath, config.layout);
     }
