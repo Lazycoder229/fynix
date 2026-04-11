@@ -130,6 +130,7 @@ export declare namespace h {
 export declare const Fynix: typeof h;
 declare class FiberReconciler {
     private wipRoot;
+    private wipEntry;
     private nextWork;
     private deletions;
     mountRoot(vnode: VNode, container: Element): void;

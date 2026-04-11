@@ -1284,13 +1284,14 @@ function endComponent(): void {
   ctx._accessedStates.forEach((state) => {
     if (!ctx._subscriptions.has(state)) {
       if (!ctx.rerender) ctx.rerender = createRerender(ctx);
+
+      // Call rerender() directly — mirrors the fix in updateComponentFiber.
       const unsub = state.subscribe(() => {
         if (ctx.rerender && ctx._isMounted) {
-          typeof queueMicrotask === "function"
-            ? queueMicrotask(() => ctx.rerender!())
-            : setTimeout(ctx.rerender, 0);
+          ctx.rerender();
         }
       });
+
       ctx._subscriptions.add(state);
       ctx._subscriptionCleanups.push(unsub);
     }
@@ -1320,10 +1321,12 @@ function createRerender(ctx: ComponentContext): () => void {
       ctx._rerenderTimeout = null;
       if (ctx._isRerendering || !ctx._isMounted) return;
 
-      // If this component has a live fiber, schedule a targeted fiber update.
-      // The Fiber work loop handles time-slicing and priority — no full re-mount.
+      // Schedule at "high" priority so the renderer uses requestAnimationFrame.
+      // Previously "normal" priority used requestIdleCallback, which the browser
+      // intentionally suppresses while the user is actively interacting (typing,
+      // clicking) — causing state changes to never appear on screen.
       if (ctx._fiber) {
-        fiberReconciler.scheduleUpdate(ctx._fiber, "normal");
+        fiberReconciler.scheduleUpdate(ctx._fiber, "high");
       } else if (ctx._vnode) {
         // Fallback: component not yet assigned a fiber (very first render race).
         // Safe to ignore — the in-progress render will pick up the latest state.
@@ -1429,6 +1432,13 @@ class FiberReconciler {
   // Work-in-progress root for this render cycle.
   private wipRoot: FynixFiber | null = null;
 
+  // The actual WIP entry-point fiber set by scheduleUpdate (targeted re-render).
+  // Distinct from wipRoot: wipRoot is walked to the tree root so commitRoot can
+  // find the container, but wipEntry is the cloned component fiber whose subtree
+  // was actually reconciled. commitRoot must start commitWork from wipEntry, NOT
+  // from wipRoot.child (which still points at the OLD committed child chain).
+  private wipEntry: FynixFiber | null = null;
+
   // Next fiber unit of work. Null when the render phase is complete.
   private nextWork: FynixFiber | null = null;
 
@@ -1446,6 +1456,7 @@ class FiberReconciler {
     rootFiber._domNode = container as unknown as Node;
 
     this.wipRoot = rootFiber;
+    this.wipEntry = null; // full mount: commitRoot walks from wipRoot.child
     this.nextWork = rootFiber;
     this.deletions = [];
 
@@ -1463,9 +1474,16 @@ class FiberReconciler {
     wip.alternate = fiber;
 
     // Walk up to the root so commitRoot can find the container.
+    // Note: root.parent references the OLD committed ancestor chain (wip.parent
+    // is copied from fiber.parent in cloneFiber). This correctly reaches the
+    // tree root for container lookup, but wipRoot.child still points at the OLD
+    // committed child — so commitRoot must NOT start from wipRoot.child here.
     let root = wip;
     while (root.parent) root = root.parent;
     this.wipRoot = root;
+
+    // Track the actual WIP fiber so commitRoot starts commitWork from it directly.
+    this.wipEntry = wip;
 
     this.nextWork = wip;
     this.deletions = [];
@@ -1582,7 +1600,18 @@ class FiberReconciler {
     // Retrieve or create the ComponentContext for this fiber.
     const vnode = fiber._vnode!;
     let ctx = componentInstances.get(vnode);
-
+    //  If no ctx found for this vnode, check the alternate's vnode.
+    // reconcileChildren creates a new VNode object each render, so the
+    // ctx is stored under the OLD vnode — retrieve and re-key it.
+    if (!ctx && fiber.alternate?._vnode) {
+      ctx = componentInstances.get(fiber.alternate._vnode);
+      if (ctx) {
+        // Re-key the ctx to the new vnode so future lookups work
+        componentInstances.delete(fiber.alternate._vnode);
+        componentInstances.set(vnode, ctx);
+        ctx._vnode = vnode;
+      }
+    }
     if (!ctx) {
       ctx = makeContext(vnode, fiber.type as ComponentFunction);
       componentInstances.set(vnode, ctx);
@@ -1644,13 +1673,17 @@ class FiberReconciler {
     ctx._accessedStates.forEach((state) => {
       if (!ctx!._subscriptions.has(state)) {
         if (!ctx!.rerender) ctx!.rerender = createRerender(ctx!);
+
+        // Call rerender() directly — no queueMicrotask wrapper.
+        // The extra microtask deferral caused a double-defer:
+        // microtask → setTimeout(scheduleUpdate) → requestIdleCallback,
+        // which is suppressed during active user input (typing / clicking).
         const unsub = state.subscribe(() => {
           if (ctx!.rerender && ctx!._isMounted) {
-            typeof queueMicrotask === "function"
-              ? queueMicrotask(() => ctx!.rerender!())
-              : setTimeout(ctx!.rerender, 0);
+            ctx!.rerender();
           }
         });
+
         ctx!._subscriptions.add(state);
         ctx!._subscriptionCleanups.push(unsub);
       }
@@ -1793,16 +1826,19 @@ class FiberReconciler {
 
       let newFiber: FynixFiber;
 
+      // AFTER (fixed)
       if (matchFiber && matchFiber.type === el.type) {
-        // UPDATE — reuse the DOM node, update props
         newFiber = this.cloneFiber(matchFiber);
         newFiber.props = el.props;
         newFiber.key = el.key;
         newFiber.alternate = matchFiber;
-        newFiber.effectTag = "UPDATE";
         newFiber.parent = wipFiber;
         newFiber._vnode = el;
         el._fiber = newFiber;
+
+        //  Component fibers must always re-execute their function to produce
+        // fresh children. Host fibers (div, span, etc.) just update props.
+        newFiber.effectTag = typeof el.type === "function" ? null : "UPDATE";
       } else {
         // PLACEMENT — new fiber
         if (matchFiber) {
@@ -1848,9 +1884,19 @@ class FiberReconciler {
     this.deletions.forEach((f) => this.commitDeletion(f));
     this.deletions = [];
 
-    if (this.wipRoot.child) this.commitWork(this.wipRoot.child);
+    if (this.wipEntry) {
+      // Targeted re-render (scheduleUpdate path): start from the WIP component
+      // fiber directly. wipRoot.child still points at the OLD committed child —
+      // the newly reconciled subtree lives under wipEntry, not wipRoot.child.
+      this.commitWork(this.wipEntry);
+    } else if (this.wipRoot.child) {
+      // Full mount (mountRoot path): the entire tree was reconciled starting
+      // from wipRoot, so its .child is the freshly-built fiber tree.
+      this.commitWork(this.wipRoot.child);
+    }
 
     this.wipRoot = null;
+    this.wipEntry = null;
     this.nextWork = null;
   }
 

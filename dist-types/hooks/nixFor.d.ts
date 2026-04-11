@@ -2,7 +2,7 @@ import { VNode } from "../types/fnx";
 interface ReactiveState<T> {
     value: T;
     _isNixState: boolean;
-    subscribe(callback: (value: T) => void): () => void;
+    subscribe(callback: () => void): () => void;
 }
 interface ForProps<T> {
     each: T[] | ReactiveState<T[]>;

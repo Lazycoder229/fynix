@@ -40,5 +40,23 @@ export {
   DarkButton,
   LinkButton,
 } from "./button";
-
+export {
+  DataTable,
+  PrimaryDataTable,
+  SecondaryDataTable,
+  SuccessDataTable,
+  DangerDataTable,
+  WarningDataTable,
+  InfoDataTable,
+  LightDataTable,
+  DarkDataTable,
+  OutlinePrimaryDataTable,
+  OutlineSecondaryDataTable,
+  OutlineSuccessDataTable,
+  OutlineDangerDataTable,
+  OutlineWarningDataTable,
+  OutlineInfoDataTable,
+  OutlineLightDataTable,
+  OutlineDarkDataTable,
+} from "./DataTable";
 export { Path } from "./path";
