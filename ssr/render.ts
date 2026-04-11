@@ -1,4 +1,5 @@
 import { type VNode, Fragment, TEXT, BOOLEAN_ATTRS } from "../runtime";
+import { escapeHTML } from "../utils/escapeHTML";
 
 const SELF_CLOSING_TAGS = new Set([
   "area",
@@ -17,15 +18,13 @@ const SELF_CLOSING_TAGS = new Set([
   "wbr",
 ]);
 
-function escapeHTML(str: unknown): string {
-  if (typeof str !== "string") return String(str ?? "");
-  return str
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
+/**
+ * Pattern for valid HTML attribute names.
+ * Allows letters, digits, hyphens, underscores, dots and colons (for namespaced attrs like xmlns:xlink).
+ * Rejects names starting with non-alphabetic characters and any that would allow
+ * attribute-name injection (e.g., names containing quotes or angle brackets).
+ */
+const VALID_ATTR_NAME = /^[a-zA-Z][a-zA-Z0-9_\-:.]*$/;
 
 async function renderChildren(children: unknown): Promise<string> {
   if (children == null) return "";
@@ -73,10 +72,11 @@ export async function renderToHTML(node: unknown): Promise<string> {
     let attrStr = "";
     const attrParts: string[] = [];
     for (const [name, value] of Object.entries(attrs)) {
+      if (!VALID_ATTR_NAME.test(name)) continue;
       if (BOOLEAN_ATTRS.has(name)) {
-        if (value) attrParts.push(name);
+        if (value) attrParts.push(escapeHTML(name));
       } else if (value != null && value !== false) {
-        attrParts.push(`${name}="${escapeHTML(String(value))}"`);
+        attrParts.push(`${escapeHTML(name)}="${escapeHTML(String(value))}"`);
       }
     }
     attrStr = attrParts.length > 0 ? " " + attrParts.join(" ") : "";
