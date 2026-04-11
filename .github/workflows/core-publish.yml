@@ -33,6 +33,8 @@ jobs:
         run: npm run build
 
       - name: Publish to npm
+        # NPM_TOKEN must be an "Automation" type token (created at https://www.npmjs.com/settings/~/tokens)
+        # to avoid EOTP errors when 2FA is enabled on the npm account.
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
