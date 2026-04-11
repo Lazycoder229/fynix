@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: "18"
           cache: "npm"
-          cache-dependency-path: core/package-lock.json
+          cache-dependency-path: package-lock.json
           registry-url: "https://registry.npmjs.org"
 
       - name: Install dependencies
