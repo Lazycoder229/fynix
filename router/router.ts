@@ -754,7 +754,7 @@ function createFynix(options: FynixRouterOptions = {}): FynixRouter {
 
     // Show enhanced 404 if no route found
     if (!Page) {
-      root.innerHTML = "";
+      while (root.firstChild) root.removeChild(root.firstChild);
       const container = document.createElement("div");
       container.style.cssText =
         "padding: 2rem; text-align: center; font-family: system-ui, sans-serif;";
@@ -832,8 +832,7 @@ function createFynix(options: FynixRouterOptions = {}): FynixRouter {
       mount(mountComponent as RouteComponent, rootSelector, safeProps);
     } catch (err) {
       console.error("[Router] Mount failed:", err);
-      // Safe error display without innerHTML
-      root.innerHTML = "";
+      while (root.firstChild) root.removeChild(root.firstChild);
       const errorDiv = document.createElement("pre");
       errorDiv.style.color = "red";
       errorDiv.textContent = "Mount Error occurred";
